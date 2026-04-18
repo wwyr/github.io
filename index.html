@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热泵控制器故障说明</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path d="M16 4L16 28" stroke="currentColor" stroke-width="2"/>
+                    <path d="M8 12L16 4L24 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M8 20L16 28L24 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>暖通故障诊断系统</span>
+            </div>
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-type="heatpump">热泵</button>
+                <button class="tab-btn" data-type="aircon">节能空调</button>
+                <button class="tab-btn" data-type="coldstorage">冷库机</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <div class="container">
+            <!-- 搜索区域 -->
+            <div class="search-section">
+                <div class="search-box">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+                        <path d="M13 13L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="搜索故障代码或描述..." />
+                </div>
+                <div class="filter-tags">
+                    <span class="filter-tag active" data-filter="all">全部</span>
+                    <span class="filter-tag" data-filter="critical">紧急</span>
+                    <span class="filter-tag" data-filter="warning">警告</span>
+                    <span class="filter-tag" data-filter="sensor">传感器</span>
+                </div>
+            </div>
+
+            <!-- 故障列表 -->
+            <div class="fault-grid" id="faultGrid">
+                <!-- 故障卡片将通过JS动态生成 -->
+            </div>
+
+            <!-- 无结果提示 -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2"/>
+                    <path d="M22 22L42 42M42 22L22 42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p>未找到匹配的故障代码</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 故障详情弹窗 -->
+    <div class="modal" id="faultModal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="fault-code-header">
+                    <span class="fault-code-badge" id="modalFaultCode">01</span>
+                    <h2 id="modalFaultTitle">错相</h2>
+                </div>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="fault-detail-section">
+                    <h3>故障描述</h3>
+                    <p id="modalFaultDescription">检测到电源相序错误</p>
+                </div>
+                <div class="fault-detail-section">
+                    <h3>可能原因</h3>
+                    <ul id="modalFaultCauses"></ul>
+                </div>
+                <div class="fault-detail-section">
+                    <h3>解决办法</h3>
+                    <div class="solution-steps" id="modalFaultSolutions"></div>
+                </div>
+                <div class="fault-detail-section">
+                    <h3>预防措施</h3>
+                    <ul id="modalFaultPrevention"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="fault-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
