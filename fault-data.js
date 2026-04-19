@@ -1534,64 +1534,635 @@ const faultData = {
             ]
         }
     ],
-    aircon: [
-        {
-            code: "E01",
-            title: "压缩机过载",
-            category: "critical",
-            description: "节能空调压缩机负载超过额定值",
-            causes: [
-                "制冷剂过多",
-                "系统高压",
-                "电压不稳"
-            ],
-            solutions: [
-                { step: "检查系统压力", detail: "测量高低压压力" },
-                { step: "检查电压", detail: "确保供电电压稳定" }
-            ],
-            prevention: [
-                "定期检查系统压力",
-                "保持电压稳定"
-            ]
-        },
-        {
-            code: "E02",
-            title: "室内风机故障",
-            category: "critical",
-            description: "室内风机运行异常",
-            causes: [
-                "风机电机故障",
-                "电容损坏",
-                "风机卡死"
-            ],
-            solutions: [
-                { step: "检查风机", detail: "手动转动风机检查是否卡死" },
-                { step: "检查电容", detail: "测量启动电容" }
-            ],
-            prevention: [
-                "定期检查风机状态",
-                "保持风机清洁"
-            ]
-        },
-        {
-            code: "E03",
-            title: "室外风机故障",
-            category: "critical",
-            description: "室外风机运行异常",
-            causes: [
-                "风机电机故障",
-                "风扇叶片损坏"
-            ],
-            solutions: [
-                { step: "检查风机", detail: "检查风机运转状态" },
-                { step: "检查叶片", detail: "检查风扇叶片是否完整" }
-            ],
-            prevention: [
-                "定期检查风机",
-                "清理室外机"
-            ]
-        }
-    ],
+    aircon: {
+        single: [
+            {
+                code: "01",
+                title: "错相",
+                category: "critical",
+                description: "检测到电源相序错误，可能导致设备损坏或运行异常",
+                causes: ["三相电源相序接反", "电源线路改造后未检查相序", "电源进线端子排连接错误"],
+                solutions: [
+                    { step: "切断设备总电源", detail: "关闭配电箱总开关，挂上警示标志" },
+                    { step: "检查三相电源相序", detail: "使用相序表检测R、S、T三相相序是否正确" },
+                    { step: "调整相序", detail: "调换任意两相电源线位置" },
+                    { step: "重新通电测试", detail: "确认相序正确后重新上电" }
+                ],
+                prevention: ["安装相序保护器", "定期检查电源线路连接状态"]
+            },
+            {
+                code: "02",
+                title: "缺相",
+                category: "critical",
+                description: "三相电源中某一相缺失，严重影响设备运行",
+                causes: ["电源线路断路或接触不良", "断路器某相触点损坏", "接线端子松动或氧化"],
+                solutions: [
+                    { step: "立即停止设备运行", detail: "防止因缺相导致电机烧毁" },
+                    { step: "检查断路器状态", detail: "测量三相电压是否正常" },
+                    { step: "检查接线端子", detail: "紧固所有电源接线端子，清理氧化层" },
+                    { step: "检查保险丝", detail: "如有熔断，查明原因后更换" }
+                ],
+                prevention: ["安装缺相保护装置", "定期检查电气连接点", "使用带缺相保护的断路器"]
+            },
+            {
+                code: "03",
+                title: "水流",
+                category: "warning",
+                description: "水系统水流检测异常",
+                causes: ["水泵未启动或故障", "水管路堵塞", "水流开关故障", "水阀未开启"],
+                solutions: [
+                    { step: "检查水泵运行状态", detail: "确认水泵是否正常运转" },
+                    { step: "检查水阀门", detail: "确保所有相关水阀处于开启状态" },
+                    { step: "检查过滤器", detail: "清理或更换水路过滤器" },
+                    { step: "测试水流开关", detail: "手动测试水流开关动作是否正常" }
+                ],
+                prevention: ["定期清理水路过滤器", "定期检查水泵运行状态"]
+            },
+            {
+                code: "04",
+                title: "脏堵",
+                category: "warning",
+                description: "系统管路脏堵，影响正常运行",
+                causes: ["干燥过滤器堵塞", "毛细管或膨胀阀堵塞", "系统内有杂质", "管路焊接遗留物"],
+                solutions: [
+                    { step: "检查干燥过滤器", detail: "观察过滤器前后是否有温差" },
+                    { step: "检查膨胀阀", detail: "检查膨胀阀是否堵塞" },
+                    { step: "清理管路", detail: "清洗或更换堵塞部件，重新抽真空" },
+                    { step: "更换制冷剂", detail: "按规定量重新充注清洁制冷剂" }
+                ],
+                prevention: ["安装干燥过滤器", "定期检查管路", "使用合格制冷剂"]
+            },
+            {
+                code: "05",
+                title: "高压",
+                category: "critical",
+                description: "系统压力过高，可能导致压缩机损坏",
+                causes: ["冷凝器散热不良", "制冷剂充注过量", "系统内有空气", "高压开关故障"],
+                solutions: [
+                    { step: "立即停机检查", detail: "防止压力继续升高造成设备损坏" },
+                    { step: "检查冷凝器", detail: "清理冷凝器翅片，检查风机运行" },
+                    { step: "检查制冷剂压力", detail: "使用压力表检测系统压力" },
+                    { step: "检查高压开关", detail: "测试高压开关动作值是否正常" }
+                ],
+                prevention: ["定期清洁冷凝器", "严格控制制冷剂充注量", "确保系统真空度合格"]
+            },
+            {
+                code: "06",
+                title: "低压",
+                category: "critical",
+                description: "系统压力过低，可能导致压缩机润滑不良",
+                causes: ["制冷剂泄漏", "膨胀阀堵塞", "蒸发器结霜严重"],
+                solutions: [
+                    { step: "检查制冷剂压力", detail: "使用压力表检测系统低压压力" },
+                    { step: "检漏处理", detail: "使用检漏仪查找泄漏点并修复" },
+                    { step: "补充制冷剂", detail: "修复泄漏后按规定量补充" },
+                    { step: "检查膨胀阀", detail: "清理或更换膨胀阀滤网" }
+                ],
+                prevention: ["定期检查制冷剂压力", "定期检查管路连接点"]
+            },
+            {
+                code: "11",
+                title: "限时",
+                category: "warning",
+                description: "控制面板操作时间限制触发",
+                causes: ["连续操作时间过长", "定时设置触发"],
+                solutions: [
+                    { step: "等待时间限制解除", detail: "根据系统设置等待冷却时间" },
+                    { step: "检查定时设置", detail: "如需修改，联系技术人员调整参数" }
+                ],
+                prevention: ["避免长时间连续操作", "合理安排设备使用时间"]
+            },
+            {
+                code: "12",
+                title: "排气高温",
+                category: "critical",
+                description: "压缩机排气温度超过安全限值",
+                causes: ["压缩比过大", "制冷剂不足", "冷却效果不良"],
+                solutions: [
+                    { step: "立即停机", detail: "防止压缩机因高温损坏" },
+                    { step: "检查冷却系统", detail: "确保冷却系统正常工作" },
+                    { step: "检查制冷剂", detail: "补充制冷剂至规定压力" }
+                ],
+                prevention: ["保持合适的运行工况", "定期检查冷却系统"]
+            },
+            {
+                code: "15",
+                title: "水箱温传（室内温度传感器）",
+                category: "sensor",
+                description: "水箱/室内温度传感器故障",
+                causes: ["传感器损坏", "线路断路", "接线端子松动"],
+                solutions: [
+                    { step: "检查线路连接", detail: "测量传感器电阻值是否正常" },
+                    { step: "更换传感器", detail: "如电阻值异常，更换同型号传感器" }
+                ],
+                prevention: ["定期检查传感器状态", "确保接线牢固"]
+            },
+            {
+                code: "16",
+                title: "盘管温传（室外盘管温度传感器）",
+                category: "sensor",
+                description: "室外盘管温度传感器故障",
+                causes: ["传感器损坏", "线路故障", "安装位置不当"],
+                solutions: [
+                    { step: "检查传感器安装", detail: "确认传感器与盘管接触良好" },
+                    { step: "测试传感器", detail: "测量传感器在不同温度下的阻值" },
+                    { step: "更换传感器", detail: "如异常则更换" }
+                ],
+                prevention: ["确保传感器安装正确", "定期检查传感器性能"]
+            },
+            {
+                code: "18",
+                title: "排气温传",
+                category: "sensor",
+                description: "排气温度传感器故障",
+                causes: ["传感器损坏", "高温导致传感器失效"],
+                solutions: [
+                    { step: "检查传感器状态", detail: "测量传感器输出信号" },
+                    { step: "更换传感器", detail: "更换为耐高温传感器" }
+                ],
+                prevention: ["使用耐高温传感器", "定期检查传感器性能"]
+            },
+            {
+                code: "21",
+                title: "环境温传",
+                category: "sensor",
+                description: "室外环境温度传感器故障",
+                causes: ["传感器损坏", "线路故障", "传感器污染"],
+                solutions: [
+                    { step: "清洁传感器", detail: "清理传感器表面的灰尘杂物" },
+                    { step: "检查线路", detail: "测量传感器信号" },
+                    { step: "更换传感器", detail: "如损坏则更换" }
+                ],
+                prevention: ["定期清洁传感器", "检查线路连接"]
+            },
+            {
+                code: "22",
+                title: "回水温传",
+                category: "sensor",
+                description: "回水温度传感器故障",
+                causes: ["传感器损坏", "安装位置不当"],
+                solutions: [
+                    { step: "检查安装位置", detail: "确保传感器安装在正确位置" },
+                    { step: "更换传感器", detail: "如损坏则更换" }
+                ],
+                prevention: ["确保传感器安装正确", "定期检查"]
+            },
+            {
+                code: "25",
+                title: "工作水箱缺水",
+                category: "warning",
+                description: "工作水箱水位低于正常值",
+                causes: ["补水系统故障", "管路泄漏", "水位传感器故障", "用水量过大"],
+                solutions: [
+                    { step: "检查实际水位", detail: "确认水箱实际水位" },
+                    { step: "检查补水系统", detail: "确认补水阀门和水泵是否正常" },
+                    { step: "检查管路", detail: "检查是否有泄漏点" },
+                    { step: "检查水位传感器", detail: "测试传感器是否正常" }
+                ],
+                prevention: ["定期检查水箱水位", "保持补水系统正常", "定期检查管路密封"]
+            },
+            {
+                code: "26",
+                title: "回水温度高",
+                category: "warning",
+                description: "回水温度超过设定上限",
+                causes: ["负荷过大", "散热不良", "水流不足"],
+                solutions: [
+                    { step: "检查系统负荷", detail: "确认系统负荷是否过大" },
+                    { step: "检查散热", detail: "确保散热系统正常" },
+                    { step: "检查水流", detail: "确认循环水流量是否充足" }
+                ],
+                prevention: ["监控系统负荷", "保持散热系统良好"]
+            },
+            {
+                code: "28",
+                title: "出水温传（室内盘管温度传感器）",
+                category: "sensor",
+                description: "出水/室内盘管温度传感器故障",
+                causes: ["传感器损坏", "线路故障"],
+                solutions: [
+                    { step: "检查线路连接", detail: "测量传感器阻值" },
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "29",
+                title: "回气温传",
+                category: "sensor",
+                description: "回气温度传感器故障",
+                causes: ["传感器损坏"],
+                solutions: [
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "35",
+                title: "压机电流大",
+                category: "critical",
+                description: "压缩机电流超过额定值",
+                causes: ["压缩机故障", "电压异常", "制冷剂过多", "系统高压"],
+                solutions: [
+                    { step: "立即停机", detail: "防止压缩机因过流烧毁" },
+                    { step: "检查电源电压", detail: "测量三相电压是否平衡" },
+                    { step: "检查系统压力", detail: "检测系统高低压是否正常" },
+                    { step: "检查压缩机", detail: "测量压缩机绕组阻值" }
+                ],
+                prevention: ["确保电压稳定", "避免制冷剂过量", "定期检查压缩机"]
+            },
+            {
+                code: "37",
+                title: "压机电流小",
+                category: "warning",
+                description: "压缩机电流低于正常值",
+                causes: ["制冷剂不足", "压缩机阀片损坏", "压缩机磨损", "电压过低"],
+                solutions: [
+                    { step: "检查制冷剂量", detail: "检测系统压力判断制冷剂是否充足" },
+                    { step: "检查压缩机效率", detail: "测量压缩机吸排气能力" },
+                    { step: "检查供电电压", detail: "确认电压是否在额定范围" }
+                ],
+                prevention: ["定期检查制冷剂压力", "监控压缩机运行参数"]
+            },
+            {
+                code: "51",
+                title: "冷凝温度高",
+                category: "critical",
+                description: "冷凝温度超过安全限值",
+                causes: ["冷凝器散热不良", "制冷剂过多", "环境温度过高", "通风不良"],
+                solutions: [
+                    { step: "检查冷凝器", detail: "清理冷凝器翅片" },
+                    { step: "检查风机", detail: "确认风机运行正常" },
+                    { step: "检查通风", detail: "确保安装空间通风良好" },
+                    { step: "检查制冷剂", detail: "检测制冷剂量是否过多" }
+                ],
+                prevention: ["定期清洁冷凝器", "保持良好通风", "监控环境温度"]
+            },
+            {
+                code: "111",
+                title: "远程限时",
+                category: "warning",
+                description: "远程控制时间限制触发",
+                causes: ["远程控制时间超限", "定时设置触发"],
+                solutions: [
+                    { step: "等待时间限制解除", detail: "根据设置等待冷却时间" },
+                    { step: "检查定时设置", detail: "必要时调整定时参数" }
+                ],
+                prevention: ["合理设置远程控制时间"]
+            }
+        ],
+        dual: [
+            {
+                code: "01",
+                title: "错相",
+                category: "critical",
+                description: "检测到电源相序错误，可能导致设备损坏或运行异常",
+                causes: ["三相电源相序接反", "电源线路改造后未检查相序", "电源进线端子排连接错误"],
+                solutions: [
+                    { step: "切断设备总电源", detail: "关闭配电箱总开关，挂上警示标志" },
+                    { step: "检查三相电源相序", detail: "使用相序表检测R、S、T三相相序" },
+                    { step: "调整相序", detail: "调换任意两相电源线位置" },
+                    { step: "重新通电测试", detail: "确认相序正确后重新上电" }
+                ],
+                prevention: ["安装相序保护器", "定期检查电源线路连接状态"]
+            },
+            {
+                code: "02",
+                title: "缺相",
+                category: "critical",
+                description: "三相电源中某一相缺失，严重影响设备运行",
+                causes: ["电源线路断路或接触不良", "断路器某相触点损坏", "接线端子松动或氧化"],
+                solutions: [
+                    { step: "立即停止设备运行", detail: "防止因缺相导致电机烧毁" },
+                    { step: "检查断路器状态", detail: "测量三相电压是否正常" },
+                    { step: "检查接线端子", detail: "紧固所有电源接线端子" },
+                    { step: "检查保险丝", detail: "如有熔断，查明原因后更换" }
+                ],
+                prevention: ["安装缺相保护装置", "定期检查电气连接点"]
+            },
+            {
+                code: "03",
+                title: "水流",
+                category: "warning",
+                description: "水系统水流检测异常",
+                causes: ["水泵未启动或故障", "水管路堵塞", "水流开关故障", "水阀未开启"],
+                solutions: [
+                    { step: "检查水泵运行状态", detail: "确认水泵是否正常运转" },
+                    { step: "检查水阀门", detail: "确保所有相关水阀处于开启状态" },
+                    { step: "检查过滤器", detail: "清理或更换水路过滤器" },
+                    { step: "测试水流开关", detail: "手动测试水流开关动作是否正常" }
+                ],
+                prevention: ["定期清理水路过滤器", "定期检查水泵运行状态"]
+            },
+            {
+                code: "04",
+                title: "脏堵",
+                category: "warning",
+                description: "系统管路脏堵，影响正常运行",
+                causes: ["干燥过滤器堵塞", "毛细管或膨胀阀堵塞", "系统内有杂质"],
+                solutions: [
+                    { step: "检查干燥过滤器", detail: "观察过滤器前后是否有温差" },
+                    { step: "检查膨胀阀", detail: "检查膨胀阀是否堵塞" },
+                    { step: "清理管路", detail: "清洗或更换堵塞部件" },
+                    { step: "更换制冷剂", detail: "按规定量重新充注清洁制冷剂" }
+                ],
+                prevention: ["安装干燥过滤器", "定期检查管路"]
+            },
+            {
+                code: "05",
+                title: "高压1",
+                category: "critical",
+                description: "1号系统压力过高，可能导致压缩机损坏",
+                causes: ["冷凝器散热不良", "制冷剂充注过量", "系统内有空气"],
+                solutions: [
+                    { step: "立即停机检查", detail: "防止压力继续升高造成设备损坏" },
+                    { step: "检查冷凝器", detail: "清理冷凝器翅片，检查风机运行" },
+                    { step: "检查制冷剂压力", detail: "使用压力表检测系统压力" }
+                ],
+                prevention: ["定期清洁冷凝器", "严格控制制冷剂充注量"]
+            },
+            {
+                code: "06",
+                title: "低压1",
+                category: "critical",
+                description: "1号系统压力过低",
+                causes: ["制冷剂泄漏", "膨胀阀堵塞", "蒸发器结霜严重"],
+                solutions: [
+                    { step: "检查制冷剂压力", detail: "检测1号系统低压压力" },
+                    { step: "检漏处理", detail: "查找泄漏点并修复" },
+                    { step: "补充制冷剂", detail: "按规定量补充制冷剂" }
+                ],
+                prevention: ["定期检查系统压力", "保持管路密封"]
+            },
+            {
+                code: "07",
+                title: "高压2",
+                category: "critical",
+                description: "2号系统压力过高",
+                causes: ["冷凝器散热不良", "制冷剂充注过量", "系统内有空气"],
+                solutions: [
+                    { step: "检查2号系统冷凝器", detail: "清理冷凝器翅片" },
+                    { step: "检查制冷剂压力", detail: "检测2号系统压力" }
+                ],
+                prevention: ["定期维护冷凝器", "避免制冷剂过量充注"]
+            },
+            {
+                code: "08",
+                title: "低压2",
+                category: "critical",
+                description: "2号系统压力过低",
+                causes: ["制冷剂泄漏", "膨胀阀堵塞"],
+                solutions: [
+                    { step: "检查2号系统压力", detail: "检测低压压力" },
+                    { step: "检漏处理", detail: "查找泄漏点并修复" }
+                ],
+                prevention: ["定期检查系统压力", "保持管路密封"]
+            },
+            {
+                code: "11",
+                title: "限时",
+                category: "warning",
+                description: "控制面板操作时间限制触发",
+                causes: ["连续操作时间过长", "定时设置触发"],
+                solutions: [
+                    { step: "等待时间限制解除", detail: "根据系统设置等待冷却时间" },
+                    { step: "检查定时设置", detail: "如需修改，联系技术人员调整参数" }
+                ],
+                prevention: ["避免长时间连续操作", "合理安排设备使用时间"]
+            },
+            {
+                code: "12",
+                title: "排气1高温",
+                category: "critical",
+                description: "1号压缩机排气温度超过安全限值",
+                causes: ["压缩比过大", "制冷剂不足", "冷却效果不良"],
+                solutions: [
+                    { step: "立即停机", detail: "防止压缩机因高温损坏" },
+                    { step: "检查冷却系统", detail: "确保1号系统冷却正常" },
+                    { step: "检查制冷剂", detail: "补充制冷剂至规定压力" }
+                ],
+                prevention: ["保持合适的运行工况", "定期检查冷却系统"]
+            },
+            {
+                code: "13",
+                title: "排气2高温",
+                category: "critical",
+                description: "2号压缩机排气温度超过安全限值",
+                causes: ["压缩比过大", "制冷剂不足", "冷却效果不良"],
+                solutions: [
+                    { step: "检查2号压缩机工况", detail: "检查运行参数" },
+                    { step: "检查冷却系统", detail: "确保2号系统冷却正常" }
+                ],
+                prevention: ["监控压缩机运行参数", "定期维护冷却系统"]
+            },
+            {
+                code: "15",
+                title: "水箱温传（室内温度传感器）",
+                category: "sensor",
+                description: "水箱/室内温度传感器故障",
+                causes: ["传感器损坏", "线路断路", "接线端子松动"],
+                solutions: [
+                    { step: "检查线路连接", detail: "测量传感器电阻值是否正常" },
+                    { step: "更换传感器", detail: "如异常则更换同型号传感器" }
+                ],
+                prevention: ["定期检查传感器状态", "确保接线牢固"]
+            },
+            {
+                code: "16",
+                title: "盘管1温传（室外盘管1温度传感器）",
+                category: "sensor",
+                description: "1号室外盘管温度传感器故障",
+                causes: ["传感器损坏", "线路故障", "安装位置不当"],
+                solutions: [
+                    { step: "检查传感器安装", detail: "确认传感器与盘管接触良好" },
+                    { step: "测试传感器", detail: "测量传感器阻值" },
+                    { step: "更换传感器", detail: "如异常则更换" }
+                ],
+                prevention: ["确保传感器安装正确", "定期检查"]
+            },
+            {
+                code: "17",
+                title: "盘管2温传（室外盘管2温度传感器）",
+                category: "sensor",
+                description: "2号室外盘管温度传感器故障",
+                causes: ["传感器损坏", "线路故障"],
+                solutions: [
+                    { step: "检查传感器及线路", detail: "测量传感器阻值" },
+                    { step: "更换传感器", detail: "使用同型号传感器更换" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "18",
+                title: "排气1温传",
+                category: "sensor",
+                description: "1号排气温度传感器故障",
+                causes: ["传感器损坏", "高温导致传感器失效"],
+                solutions: [
+                    { step: "检查传感器状态", detail: "测量传感器输出信号" },
+                    { step: "更换传感器", detail: "更换为耐高温传感器" }
+                ],
+                prevention: ["使用耐高温传感器", "定期检查"]
+            },
+            {
+                code: "19",
+                title: "排气2温传",
+                category: "sensor",
+                description: "2号排气温度传感器故障",
+                causes: ["传感器损坏"],
+                solutions: [
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "21",
+                title: "环境温传",
+                category: "sensor",
+                description: "室外环境温度传感器故障",
+                causes: ["传感器损坏", "线路故障", "传感器污染"],
+                solutions: [
+                    { step: "清洁传感器", detail: "清理传感器表面的灰尘杂物" },
+                    { step: "检查线路", detail: "测量传感器信号" },
+                    { step: "更换传感器", detail: "如损坏则更换" }
+                ],
+                prevention: ["定期清洁传感器", "检查线路连接"]
+            },
+            {
+                code: "22",
+                title: "回水温传",
+                category: "sensor",
+                description: "回水温度传感器故障",
+                causes: ["传感器损坏", "安装位置不当"],
+                solutions: [
+                    { step: "检查安装位置", detail: "确保传感器安装在正确位置" },
+                    { step: "更换传感器", detail: "如损坏则更换" }
+                ],
+                prevention: ["确保传感器安装正确", "定期检查"]
+            },
+            {
+                code: "25",
+                title: "工作水箱缺水",
+                category: "warning",
+                description: "工作水箱水位低于正常值",
+                causes: ["补水系统故障", "管路泄漏", "水位传感器故障"],
+                solutions: [
+                    { step: "检查实际水位", detail: "确认水箱实际水位" },
+                    { step: "检查补水系统", detail: "确认补水阀门和水泵是否正常" },
+                    { step: "检查管路", detail: "检查是否有泄漏点" }
+                ],
+                prevention: ["定期检查水箱水位", "保持补水系统正常"]
+            },
+            {
+                code: "26",
+                title: "回水温度高",
+                category: "warning",
+                description: "回水温度超过设定上限",
+                causes: ["负荷过大", "散热不良", "水流不足"],
+                solutions: [
+                    { step: "检查系统负荷", detail: "确认系统负荷是否过大" },
+                    { step: "检查散热", detail: "确保散热系统正常" },
+                    { step: "检查水流", detail: "确认循环水流量" }
+                ],
+                prevention: ["监控系统负荷", "保持散热系统良好"]
+            },
+            {
+                code: "27",
+                title: "出水1温传（室内盘管1温度传感器）",
+                category: "sensor",
+                description: "1号出水/室内盘管温度传感器故障",
+                causes: ["传感器损坏", "线路故障"],
+                solutions: [
+                    { step: "检查线路", detail: "测量传感器阻值" },
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "28",
+                title: "出水2温传（室内盘管2温度传感器）",
+                category: "sensor",
+                description: "2号出水/室内盘管温度传感器故障",
+                causes: ["传感器损坏"],
+                solutions: [
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "29",
+                title: "回气1温传",
+                category: "sensor",
+                description: "1号回气温度传感器故障",
+                causes: ["传感器损坏"],
+                solutions: [
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "30",
+                title: "回气2温传",
+                category: "sensor",
+                description: "2号回气温度传感器故障",
+                causes: ["传感器损坏"],
+                solutions: [
+                    { step: "更换传感器", detail: "更换为同型号传感器" }
+                ],
+                prevention: ["定期检查传感器"]
+            },
+            {
+                code: "35",
+                title: "压机1电流",
+                category: "critical",
+                description: "1号压缩机电流异常",
+                causes: ["压缩机故障", "电压异常", "制冷剂过多", "系统高压"],
+                solutions: [
+                    { step: "检查电源电压", detail: "测量三相电压是否平衡" },
+                    { step: "检查系统压力", detail: "检测系统高低压" },
+                    { step: "检查压缩机", detail: "测量压缩机绕组阻值" }
+                ],
+                prevention: ["确保电压稳定", "定期检查压缩机"]
+            },
+            {
+                code: "36",
+                title: "压机2电流",
+                category: "critical",
+                description: "2号压缩机电流异常",
+                causes: ["压缩机故障", "电压异常", "制冷剂过多"],
+                solutions: [
+                    { step: "检查电源电压", detail: "测量供电电压" },
+                    { step: "检查2号压缩机", detail: "检查压缩机运行状态" }
+                ],
+                prevention: ["确保电压稳定", "定期检查压缩机"]
+            },
+            {
+                code: "51",
+                title: "冷凝温度高",
+                category: "critical",
+                description: "冷凝温度超过安全限值",
+                causes: ["冷凝器散热不良", "制冷剂过多", "环境温度过高"],
+                solutions: [
+                    { step: "检查冷凝器", detail: "清理冷凝器翅片" },
+                    { step: "检查风机", detail: "确认风机运行正常" },
+                    { step: "检查通风", detail: "确保通风良好" }
+                ],
+                prevention: ["定期清洁冷凝器", "保持良好通风"]
+            },
+            {
+                code: "111",
+                title: "远程限时",
+                category: "warning",
+                description: "远程控制时间限制触发",
+                causes: ["远程控制时间超限", "定时设置触发"],
+                solutions: [
+                    { step: "等待时间限制解除", detail: "根据设置等待冷却时间" },
+                    { step: "检查定时设置", detail: "必要时调整定时参数" }
+                ],
+                prevention: ["合理设置远程控制时间"]
+            }
+        ]
+    },
     coldstorage: [
         {
             code: "C01",

@@ -1,5 +1,6 @@
 // 当前状态
 let currentType = 'heatpump';
+let currentSubType = 'single';
 let currentFilter = 'all';
 
 // 初始化
@@ -15,6 +16,14 @@ function initEventListeners() {
         btn.addEventListener('click', function() {
             const type = this.dataset.type;
             switchType(type);
+        });
+    });
+
+    // 子类型切换（单系统/双系统）
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const subtype = this.dataset.subtype;
+            switchSubType(subtype);
         });
     });
 
@@ -41,6 +50,17 @@ function initEventListeners() {
     });
 }
 
+// 获取当前故障列表
+function getCurrentFaults() {
+    const data = faultData[currentType];
+    // aircon 是 { single: [...], dual: [...] } 结构
+    if (currentType === 'aircon') {
+        return (data && data[currentSubType]) || [];
+    }
+    // 其他类型直接是数组
+    return data || [];
+}
+
 // 切换机组类型
 function switchType(type) {
     currentType = type;
@@ -49,6 +69,48 @@ function switchType(type) {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.type === type) {
+            btn.classList.add('active');
+        }
+    });
+
+    // 显示/隐藏子系统切换
+    const subTabs = document.getElementById('subTabs');
+    if (type === 'aircon') {
+        subTabs.style.display = 'flex';
+        // 重置子类型为单系统
+        currentSubType = 'single';
+        document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.subtype === 'single') {
+                btn.classList.add('active');
+            }
+        });
+    } else {
+        subTabs.style.display = 'none';
+    }
+
+    // 重置筛选和搜索
+    currentFilter = 'all';
+    document.querySelectorAll('.filter-tag').forEach(tag => {
+        tag.classList.remove('active');
+        if (tag.dataset.filter === 'all') {
+            tag.classList.add('active');
+        }
+    });
+    document.getElementById('searchInput').value = '';
+
+    // 重新渲染卡片
+    renderFaultCards();
+}
+
+// 切换子系统类型
+function switchSubType(subtype) {
+    currentSubType = subtype;
+
+    // 更新子标签样式
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.subtype === subtype) {
             btn.classList.add('active');
         }
     });
@@ -87,13 +149,15 @@ function setFilter(filter) {
 // 渲染故障卡片
 function renderFaultCards() {
     const faultGrid = document.getElementById('faultGrid');
-    const faults = faultData[currentType] || [];
+    const faults = getCurrentFaults();
 
     if (faults.length === 0) {
-        faultGrid.innerHTML = '<div class="no-results"><p>该机组类型暂无故障数据</p></div>';
+        faultGrid.innerHTML = '';
+        document.getElementById('noResults').style.display = 'block';
         return;
     }
 
+    document.getElementById('noResults').style.display = 'none';
     faultGrid.innerHTML = faults.map(fault => createFaultCard(fault)).join('');
 }
 
@@ -160,7 +224,7 @@ function filterFaults(query) {
 
 // 显示故障详情
 function showFaultDetail(code) {
-    const faults = faultData[currentType] || [];
+    const faults = getCurrentFaults();
     const fault = faults.find(f => f.code === code);
 
     if (!fault) return;
@@ -192,13 +256,13 @@ function showFaultDetail(code) {
 
     // 显示弹窗
     document.getElementById('faultModal').classList.add('active');
-    document.body.style.overflow = 'hidden'; // 防止背景滚动
+    document.body.style.overflow = 'hidden';
 }
 
 // 关闭弹窗
 function closeModal() {
     document.getElementById('faultModal').classList.remove('active');
-    document.body.style.overflow = ''; // 恢复滚动
+    document.body.style.overflow = '';
 }
 
 // 点击弹窗外部关闭
